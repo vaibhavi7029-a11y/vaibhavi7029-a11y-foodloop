@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Add Surplus Food | FoodLoop</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        body {
+            background: #f4f8f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .foodloop-logo {
+            width: 170px;
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #198754;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e5e5e5;
+            margin: 25px 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d5ddd8;
+            border-radius: 10px;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            background: #fff;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #198754;
+            box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #198754;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: #157347;
+        }
+
+        .info-box {
+            background: #eef8f1;
+            border-left: 4px solid #198754;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            color: #315c42;
+            font-size: 14px;
+        }
+
+        .navigation {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .navigation a {
+            color: #198754;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 8px;
+        }
+
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+
+            .container {
+                margin: 20px;
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <!-- FoodLoop Logo -->
+        <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="FoodLoop Logo"
+            class="foodloop-logo"
+        >
+
+
+        <!-- Page Heading -->
+        <h1>🍱 Add Surplus Food</h1>
+
+        <p class="subtitle">
+            Share available surplus food with NGOs and help reduce food waste.
+        </p>
+
+
+        <div class="info-box">
+
+            💚 <strong>FoodLoop Mission:</strong>
+
+            Your surplus food can become a valuable meal for someone in need.
+
+        </div>
+
+
+        <hr>
+
+
+        <!-- Donation Form -->
+        <form method="POST">
+
+
+            <!-- Food Name -->
+            <div class="form-group">
+
+                <label for="food_name">
+                    🍚 Food Name
+                </label>
+
+                <input
+                    type="text"
+                    id="food_name"
+                    name="food_name"
+                    placeholder="e.g. Veg Biryani"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Food Type -->
+            <div class="form-group">
+
+                <label for="food_type">
+                    🥗 Food Type
+                </label>
+
+                <input
+                    type="text"
+                    id="food_type"
+                    name="food_type"
+                    placeholder="e.g. Vegetarian"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Quantity -->
+            <div class="form-group">
+
+                <label for="quantity">
+                    🔢 Quantity
+                </label>
+
+                <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    min="1"
+                    placeholder="e.g. 50"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Quantity Unit -->
+            <div class="form-group">
+
+                <label for="quantity_unit">
+                    📦 Quantity Unit
+                </label>
+
+                <select
+                    id="quantity_unit"
+                    name="quantity_unit"
+                    required
+                >
+
+                    <option value="">
+                        Select Unit
+                    </option>
+
+                    <option value="MEALS">
+                        Meals
+                    </option>
+
+                    <option value="KG">
+                        KG
+                    </option>
+
+                    <option value="PACKETS">
+                        Packets
+                    </option>
+
+                    <option value="PLATES">
+                        Plates
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Available Until -->
+            <div class="form-group">
+
+                <label for="available_until">
+                    ⏰ Available Until
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="available_until"
+                    name="available_until"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Description -->
+            <div class="form-group">
+
+                <label for="description">
+                    📝 Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="5"
+                    placeholder="Describe the available surplus food..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- Submit Button -->
+            <button
+                type="submit"
+                class="submit-btn"
+            >
+
+                🍱 Add Surplus Food
+
+            </button>
+
+
+        </form>
+
+
+        <!-- Navigation -->
+        <div class="navigation">
+
+            <a href="/dashboard">
+                ← Back to Dashboard
+            </a>
+
+            <span>|</span>
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>

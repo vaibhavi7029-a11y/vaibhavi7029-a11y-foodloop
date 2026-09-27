@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Donations | FoodLoop</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        body {
+            background: #f4f8f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .foodloop-logo {
+            width: 170px;
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #198754;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .top-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .add-btn {
+            background: #198754;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .add-btn:hover {
+            background: #157347;
+        }
+
+        .donation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 22px;
+        }
+
+        .donation-card {
+            background: white;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+            border: 1px solid #e5ebe7;
+        }
+
+        .food-icon {
+            font-size: 38px;
+            margin-bottom: 8px;
+        }
+
+        .donation-card h2 {
+            color: #198754;
+            margin: 5px 0 15px;
+        }
+
+        .info {
+            margin: 10px 0;
+            color: #444;
+        }
+
+        .info strong {
+            color: #222;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .available {
+            background: #e8f7ee;
+            color: #198754;
+        }
+
+        .requested {
+            background: #fff4d6;
+            color: #946c00;
+        }
+
+        .picked {
+            background: #e1f0ff;
+            color: #1769aa;
+        }
+
+        .completed {
+            background: #dff5e7;
+            color: #146c43;
+        }
+
+        .expired,
+        .cancelled {
+            background: #f8e5e5;
+            color: #a33a3a;
+        }
+
+        .empty {
+            background: white;
+            text-align: center;
+            padding: 45px 20px;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .empty h2 {
+            color: #198754;
+        }
+
+        .navigation {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .navigation a {
+            color: #198754;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 8px;
+        }
+
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                margin: 20px 10px;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+
+        <!-- Logo -->
+
+        <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="FoodLoop Logo"
+            class="foodloop-logo"
+        >
+
+
+        <!-- Heading -->
+
+        <h1>📦 My Donations</h1>
+
+        <p class="subtitle">
+            Track the surplus food shared by your organization.
+        </p>
+
+
+        <!-- Top Actions -->
+
+        <div class="top-actions">
+
+            <span>
+                🍱 Manage your available surplus food
+            </span>
+
+            <a
+                href="/add-donation"
+                class="add-btn"
+            >
+                + Add Surplus Food
+            </a>
+
+        </div>
+
+
+        {% if donations %}
+
+
+            <div class="donation-grid">
+
+
+                {% for donation in donations %}
+
+
+                    <div class="donation-card">
+
+
+                        <div class="food-icon">
+                            🍱
+                        </div>
+
+
+                        <h2>
+                            {{ donation["food_name"] }}
+                        </h2>
+
+
+                        <div class="info">
+
+                            <strong>Food Type:</strong>
+
+                            {{ donation["food_type"] }}
+
+                        </div>
+
+
+                        <div class="info">
+
+                            <strong>Quantity:</strong>
+
+                            {{ donation["quantity"] }}
+                            {{ donation["quantity_unit"] }}
+
+                        </div>
+
+
+                        <div class="info">
+
+                            <strong>Available Until:</strong>
+
+                            {{ donation["available_until"] }}
+
+                        </div>
+
+
+                        {% if donation["description"] %}
+
+                            <div class="info">
+
+                                <strong>Description:</strong>
+
+                                {{ donation["description"] }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- Status -->
+
+                        {% if donation["status"] == "AVAILABLE" %}
+
+                            <span class="status available">
+                                🟢 AVAILABLE
+                            </span>
+
+                        {% elif donation["status"] == "REQUESTED" %}
+
+                            <span class="status requested">
+                                🟡 REQUESTED
+                            </span>
+
+                        {% elif donation["status"] == "PICKED_UP" %}
+
+                            <span class="status picked">
+                                🔵 PICKED UP
+                            </span>
+
+                        {% elif donation["status"] == "COMPLETED" %}
+
+                            <span class="status completed">
+                                ✅ COMPLETED
+                            </span>
+
+                        {% elif donation["status"] == "EXPIRED" %}
+
+                            <span class="status expired">
+                                🔴 EXPIRED
+                            </span>
+
+                        {% elif donation["status"] == "CANCELLED" %}
+
+                            <span class="status cancelled">
+                                ❌ CANCELLED
+                            </span>
+
+                        {% else %}
+
+                            <span class="status">
+                                {{ donation["status"] }}
+                            </span>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <div class="empty">
+
+                <div style="font-size: 55px;">
+                    🍱
+                </div>
+
+                <h2>
+                    No Surplus Food Yet
+                </h2>
+
+                <p>
+                    You haven't added any surplus food donations yet.
+                </p>
+
+                <br>
+
+                <a
+                    href="/add-donation"
+                    class="add-btn"
+                >
+                    + Add Your First Donation
+                </a>
+
+            </div>
+
+
+        {% endif %}
+
+
+        <!-- Navigation -->
+
+        <div class="navigation">
+
+            <a href="/dashboard">
+                ← Dashboard
+            </a>
+
+            |
+
+            <a href="/food-requests">
+                Food Requests
+            </a>
+
+            |
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>

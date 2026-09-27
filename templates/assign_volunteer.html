@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Assign Volunteer | FoodLoop</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        body {
+            background: #f4f8f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .assign-page {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .foodloop-logo {
+            width: 160px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            color: #198754;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+            border: 1px solid #e5ebe7;
+        }
+
+        .food-box {
+            background: #f5faf7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .food-box h2 {
+            color: #198754;
+            margin-top: 0;
+        }
+
+        .info {
+            padding: 8px 0;
+            color: #555;
+        }
+
+        .info strong {
+            color: #222;
+        }
+
+        .section-title {
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d5ddd8;
+            border-radius: 10px;
+            font-size: 15px;
+            background: white;
+            box-sizing: border-box;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #198754;
+            box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.1);
+        }
+
+        .assign-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #198754;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .assign-btn:hover {
+            background: #157347;
+        }
+
+        .navigation {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .navigation a {
+            color: #198754;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 8px;
+        }
+
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+
+            .assign-page {
+                margin: 20px 10px;
+                padding: 10px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="assign-page">
+
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="FoodLoop Logo"
+                class="foodloop-logo"
+            >
+
+            <h1>🚚 Assign Volunteer</h1>
+
+            <p>
+                Assign a volunteer to pick up and deliver the surplus food.
+            </p>
+
+        </div>
+
+
+        <!-- MAIN CARD -->
+
+        <div class="card">
+
+
+            <!-- REQUEST DETAILS -->
+
+            <div class="food-box">
+
+                <h2>
+                    🍱 {{ request["food_name"] }}
+                </h2>
+
+                <div class="info">
+
+                    <strong>Food Type:</strong>
+
+                    {{ request["food_type"] }}
+
+                </div>
+
+                <div class="info">
+
+                    <strong>Requested Quantity:</strong>
+
+                    {{ request["requested_quantity"] }}
+                    {{ request["quantity_unit"] }}
+
+                </div>
+
+                <div class="info">
+
+                    <strong>NGO:</strong>
+
+                    {{ request["ngo_name"] }}
+
+                </div>
+
+            </div>
+
+
+            <!-- VOLUNTEER FORM -->
+
+            <h3 class="section-title">
+                👤 Select Volunteer
+            </h3>
+
+            <form
+                method="POST"
+            >
+
+                <select
+                    name="volunteer_user_id"
+                    required
+                >
+
+                    <option value="">
+                        Select a volunteer
+                    </option>
+
+                    {% for volunteer in volunteers %}
+
+                        <option value="{{ volunteer['user_id'] }}">
+
+                            {{ volunteer["name"] }}
+
+                            {% if volunteer["phone"] %}
+                                — {{ volunteer["phone"] }}
+                            {% endif %}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+                <button
+                    type="submit"
+                    class="assign-btn"
+                >
+
+                    🚚 Assign Volunteer
+
+                </button>
+
+            </form>
+
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <div class="navigation">
+
+            <a href="/food-requests">
+                ← Food Requests
+            </a>
+
+            <span>|</span>
+
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <span>|</span>
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>

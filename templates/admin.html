@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>FoodLoop | Admin Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4faf6;
+            color: #20352b;
+        }
+
+        /* =========================
+           TOPBAR
+        ========================= */
+
+        .topbar {
+            background: white;
+            min-height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 12px 35px;
+
+            border-bottom: 1px solid #e4eee8;
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+
+            border-radius: 50%;
+
+            background: #e8f7ee;
+            border: 2px solid #b8e6c8;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 24px;
+        }
+
+        .brand-text h2 {
+            margin: 0;
+            color: #087443;
+            font-size: 23px;
+        }
+
+        .brand-text span {
+            color: #718078;
+            font-size: 10px;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-badge {
+            background: #e8f7ee;
+            color: #087443;
+
+            padding: 7px 13px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            text-decoration: none;
+
+            background: #087443;
+            color: white;
+
+            padding: 9px 17px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #065d36;
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container {
+            width: 100%;
+            max-width: 1350px;
+
+            margin: auto;
+
+            padding: 35px 25px;
+        }
+
+        .page-heading {
+            margin-bottom: 28px;
+        }
+
+        .page-heading h1 {
+            margin: 0;
+
+            font-size: 30px;
+
+            color: #18352a;
+        }
+
+        .page-heading p {
+            margin-top: 7px;
+
+            color: #718078;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           STATISTICS
+        ========================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: white;
+
+            border-radius: 16px;
+
+            padding: 22px;
+
+            border: 1px solid #e3eee7;
+
+            box-shadow:
+                0 7px 25px rgba(0, 80, 50, 0.06);
+        }
+
+        .stat-icon {
+            font-size: 27px;
+
+            margin-bottom: 10px;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+
+            font-size: 28px;
+
+            color: #087443;
+        }
+
+        .stat-card p {
+            margin: 5px 0 0;
+
+            color: #718078;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        .section {
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            margin-bottom: 28px;
+
+            border: 1px solid #e3eee7;
+
+            box-shadow:
+                0 7px 25px rgba(0, 80, 50, 0.05);
+        }
+
+        .section-title {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 20px;
+        }
+
+        .section-title h2 {
+            margin: 0;
+
+            color: #18352a;
+
+            font-size: 20px;
+        }
+
+        .count {
+            background: #e8f7ee;
+
+            color: #087443;
+
+            padding: 6px 11px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 800px;
+        }
+
+        th {
+            text-align: left;
+
+            background: #f4faf6;
+
+            color: #466256;
+
+            padding: 13px;
+
+            font-size: 12px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.3px;
+
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 13px;
+
+            border-bottom: 1px solid #edf3ef;
+
+            color: #40564b;
+
+            font-size: 13px;
+
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        /* =========================
+           TEXT
+        ========================= */
+
+        .person-name {
+            font-weight: 700;
+
+            color: #20352b;
+        }
+
+        .organization {
+            color: #087443;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           BADGES
+        ========================= */
+
+        .badge {
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 15px;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+        }
+
+        .badge-green {
+            background: #e8f7ee;
+            color: #087443;
+        }
+
+        .badge-yellow {
+            background: #fff6d9;
+            color: #9a7300;
+        }
+
+        .badge-red {
+            background: #ffe9e9;
+            color: #b42318;
+        }
+
+        .badge-blue {
+            background: #e8f2ff;
+            color: #1769aa;
+        }
+
+        .badge-purple {
+            background: #f0e8ff;
+            color: #6c35a8;
+        }
+
+        .badge-gray {
+            background: #eef1ef;
+            color: #68756e;
+        }
+
+        .role-badge {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 15px;
+
+            background: #e8f7ee;
+
+            color: #087443;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================
+           EMPTY
+        ========================= */
+
+        .empty {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #8a9991;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            text-align: center;
+
+            padding: 20px;
+
+            color: #8a9991;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1000px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .topbar {
+                padding: 12px 15px;
+            }
+
+            .brand-text span {
+                display: none;
+            }
+
+            .admin-badge {
+                display: none;
+            }
+
+            .admin-user {
+                gap: 8px;
+            }
+
+            .container {
+                padding: 25px 15px;
+            }
+
+            .page-heading h1 {
+                font-size: 25px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     TOPBAR
+===================================================== -->
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <div class="logo-icon">
+            🌿
+        </div>
+
+        <div class="brand-text">
+
+            <h2>FoodLoop</h2>
+
+            <span>
+                Share Food • Reduce Waste
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-user">
+
+        <span class="admin-badge">
+            👑 ADMIN
+        </span>
+
+        <span>
+            {{ session["name"] }}
+        </span>
+
+        <a href="/logout"
+           class="logout-btn">
+
+            Logout
+
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="container">
+
+
+    <!-- PAGE HEADING -->
+
+    <div class="page-heading">
+
+        <h1>
+            Admin Dashboard
+        </h1>
+
+        <p>
+            Manage and monitor all FoodLoop platform data
+        </p>
+
+    </div>
+
+
+
+    <!-- =================================================
+         STATISTICS
+    ================================================== -->
+
+    <div class="stats">
+
+
+        <!-- USERS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <h3>
+                {{ total_users }}
+            </h3>
+
+            <p>
+                Total Users
+            </p>
+
+        </div>
+
+
+        <!-- RESTAURANTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🍽️
+            </div>
+
+            <h3>
+                {{ total_restaurants }}
+            </h3>
+
+            <p>
+                Restaurants / Hotels
+            </p>
+
+        </div>
+
+
+        <!-- NGOS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🤝
+            </div>
+
+            <h3>
+                {{ total_ngos }}
+            </h3>
+
+            <p>
+                NGOs
+            </p>
+
+        </div>
+
+
+        <!-- VOLUNTEERS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🚚
+            </div>
+
+            <h3>
+                {{ total_volunteers }}
+            </h3>
+
+            <p>
+                Volunteers
+            </p>
+
+        </div>
+
+
+        <!-- DONATIONS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🍱
+            </div>
+
+            <h3>
+                {{ total_donations }}
+            </h3>
+
+            <p>
+                Food Donations
+            </p>
+
+        </div>
+
+
+        <!-- REQUESTS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📋
+            </div>
+
+            <h3>
+                {{ total_requests }}
+            </h3>
+
+            <p>
+                Food Requests
+            </p>
+
+        </div>
+
+
+        <!-- PICKUPS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🚛
+            </div>
+
+            <h3>
+                {{ total_pickups }}
+            </h3>
+
+            <p>
+                Pickups / Deliveries
+            </p>
+
+        </div>
+
+
+        <!-- FEEDBACK -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ⭐
+            </div>
+
+            <h3>
+                {{ total_feedback }}
+            </h3>
+
+            <p>
+                Feedback
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         RESTAURANTS
+    ================================================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                🍽️ Registered Restaurants
+            </h2>
+
+            <span class="count">
+                {{ total_restaurants }}
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            {% if restaurants %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Name</th>
+
+                        <th>Organization</th>
+
+                        <th>Email</th>
+
+                        <th>Phone</th>
+
+                        <th>City</th>
+
+                        <th>Registered</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for restaurant in restaurants %}
+
+                    <tr>
+
+                        <td class="person-name">
+
+                            {{ restaurant["name"] }}
+
+                        </td>
+
+
+                        <td class="organization">
+
+                            {{ restaurant["organization_name"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ restaurant["email"] }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ restaurant["phone"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ restaurant["city"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ restaurant["created_at"] }}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+
+                No restaurants registered yet.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         NGOs
+    ================================================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                🤝 Registered NGOs
+            </h2>
+
+            <span class="count">
+                {{ total_ngos }}
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            {% if ngos %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Name</th>
+
+                        <th>Organization</th>
+
+                        <th>Email</th>
+
+                        <th>Phone</th>
+
+                        <th>City</th>
+
+                        <th>Registered</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for ngo in ngos %}
+
+                    <tr>
+
+                        <td class="person-name">
+
+                            {{ ngo["name"] }}
+
+                        </td>
+
+
+                        <td class="organization">
+
+                            {{ ngo["organization_name"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ ngo["email"] }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ ngo["phone"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ ngo["city"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ ngo["created_at"] }}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+
+                No NGOs registered yet.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         VOLUNTEERS
+    ================================================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                🚚 Registered Volunteers
+            </h2>
+
+            <span class="count">
+                {{ total_volunteers }}
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            {% if volunteers %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Name</th>
+
+                        <th>Email</th>
+
+                        <th>Phone</th>
+
+                        <th>Role</th>
+
+                        <th>Registered</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for volunteer in volunteers %}
+
+                    <tr>
+
+                        <td class="person-name">
+
+                            {{ volunteer["name"] }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ volunteer["email"] }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ volunteer["phone"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="role-badge">
+
+                                VOLUNTEER
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ volunteer["created_at"] }}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+
+                No volunteers registered yet.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         FOOD DONATIONS
+    ================================================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                🍱 Food Donations
+            </h2>
+
+            <span class="count">
+                {{ total_donations }}
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            {% if donations %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Food</th>
+
+                        <th>Type</th>
+
+                        <th>Quantity</th>
+
+                        <th>Restaurant</th>
+
+                        <th>City</th>
+
+                        <th>Available Until</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for donation in donations %}
+
+                    <tr>
+
+                        <td class="person-name">
+
+                            {{ donation["food_name"] }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ donation["food_type"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ donation["quantity"] }}
+
+                            {{ donation["quantity_unit"] }}
+
+                        </td>
+
+
+                        <td class="organization">
+
+                            {{ donation["restaurant_name"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ donation["restaurant_city"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ donation["available_until"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+
+                            {% if donation["status"] == "AVAILABLE" %}
+
+                            <span class="badge badge-green">
+
+                                AVAILABLE
+
+                            </span>
+
+
+                            {% elif donation["status"] == "REQUESTED" %}
+
+                            <span class="badge badge-yellow">
+
+                                REQUESTED
+
+                            </span>
+
+
+                            {% elif donation["status"] == "PICKED_UP" %}
+
+                            <span class="badge badge-blue">
+
+                                PICKED UP
+
+                            </span>
+
+
+                            {% elif donation["status"] == "COMPLETED" %}
+
+                            <span class="badge badge-green">
+
+                                COMPLETED
+
+                            </span>
+
+
+                            {% elif donation["status"] == "EXPIRED" %}
+
+                            <span class="badge badge-gray">
+
+                                EXPIRED
+
+                            </span>
+
+
+                            {% elif donation["status"] == "CANCELLED" %}
+
+                            <span class="badge badge-red">
+
+                                CANCELLED
+
+                            </span>
+
+
+                            {% else %}
+
+                            <span class="badge badge-gray">
+
+                                {{ donation["status"] }}
+
+                            </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+
+                No food donations available.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         FOOD REQUESTS
+    ================================================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                📋 Food Requests
+            </h2>
+
+            <span class="count">
+                {{ total_requests }}
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            {% if food_requests %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Food</th>
+
+                        <th>Quantity</th>
+
+                        <th>Restaurant</th>
+
+                        <th>NGO</th>
+
+                        <th>City</th>
+
+                        <th>Requested At</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for req in food_requests %}
+
+                    <tr>
+
+                        <td class="person-name">
+
+                            {{ req["food_name"] }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ req["requested_quantity"] }}
+
+                            {{ req["quantity_unit"] }}
+
+                        </td>
+
+
+                        <td class="organization">
+
+                            {{ req["restaurant_name"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ req["ngo_name"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ req["ngo_city"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ req["requested_at"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+
+                            {% if req["request_status"] == "PENDING" %}
+
+                            <span class="badge badge-yellow">
+
+                                PENDING
+
+                            </span>
+
+
+                            {% elif req["request_status"] == "APPROVED" %}
+
+                            <span class="badge badge-blue">
+
+                                APPROVED
+
+                            </span>
+
+
+                            {% elif req["request_status"] == "REJECTED" %}
+
+                            <span class="badge badge-red">
+
+                                REJECTED
+
+                            </span>
+
+
+                            {% elif req["request_status"] == "COMPLETED" %}
+
+                            <span class="badge badge-green">
+
+                                COMPLETED
+
+                            </span>
+
+
+                            {% elif req["request_status"] == "CANCELLED" %}
+
+                            <span class="badge badge-gray">
+
+                                CANCELLED
+
+                            </span>
+
+
+                            {% else %}
+
+                            <span class="badge badge-gray">
+
+                                {{ req["request_status"] }}
+
+                            </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+
+                No food requests found.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         PICKUPS & DELIVERIES
+    ================================================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                🚛 Pickups & Deliveries
+            </h2>
+
+            <span class="count">
+                {{ total_pickups }}
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            {% if pickups %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Food</th>
+
+                        <th>Quantity</th>
+
+                        <th>Restaurant</th>
+
+                        <th>NGO</th>
+
+                        <th>Volunteer</th>
+
+                        <th>Pickup Time</th>
+
+                        <th>Delivery Time</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for pickup in pickups %}
+
+                    <tr>
+
+                        <td class="person-name">
+
+                            {{ pickup["food_name"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ pickup["quantity"] or "—" }}
+
+                            {{ pickup["quantity_unit"] or "" }}
+
+                        </td>
+
+
+                        <td class="organization">
+
+                            {{ pickup["restaurant_name"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ pickup["ngo_name"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ pickup["volunteer_name"] or "Not Assigned" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ pickup["pickup_time"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ pickup["delivery_time"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+
+                            {% if pickup["status"] == "ASSIGNED" %}
+
+                            <span class="badge badge-yellow">
+
+                                ASSIGNED
+
+                            </span>
+
+
+                            {% elif pickup["status"] == "ON_THE_WAY" %}
+
+                            <span class="badge badge-blue">
+
+                                ON THE WAY
+
+                            </span>
+
+
+                            {% elif pickup["status"] == "COLLECTED" %}
+
+                            <span class="badge badge-purple">
+
+                                COLLECTED
+
+                            </span>
+
+
+                            {% elif pickup["status"] == "DELIVERED" %}
+
+                            <span class="badge badge-green">
+
+                                DELIVERED
+
+                            </span>
+
+
+                            {% elif pickup["status"] == "CANCELLED" %}
+
+                            <span class="badge badge-red">
+
+                                CANCELLED
+
+                            </span>
+
+
+                            {% else %}
+
+                            <span class="badge badge-gray">
+
+                                {{ pickup["status"] }}
+
+                            </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+
+                No pickup records found.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         FEEDBACK
+    ================================================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                ⭐ User Feedback
+            </h2>
+
+            <span class="count">
+                {{ total_feedback }}
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            {% if feedback %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>User</th>
+
+                        <th>Request ID</th>
+
+                        <th>Rating</th>
+
+                        <th>Comment</th>
+
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in feedback %}
+
+                    <tr>
+
+                        <td class="person-name">
+
+                            {{ item["user_name"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            #{{ item["request_id"] }}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if item["rating"] %}
+
+                            ⭐ {{ item["rating"] }}/5
+
+                            {% else %}
+
+                            —
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ item["comment"] or "No comment" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ item["created_at"] or "—" }}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+
+                No feedback submitted yet.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         SUBSCRIPTIONS
+    ================================================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>
+                💳 Organization Subscriptions
+            </h2>
+
+            <span class="count">
+                {{ total_subscriptions }}
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            {% if subscriptions %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Organization</th>
+
+                        <th>Plan</th>
+
+                        <th>Start Date</th>
+
+                        <th>End Date</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for subscription in subscriptions %}
+
+                    <tr>
+
+                        <td class="organization">
+
+                            {{ subscription["organization_name"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+
+                            {% if subscription["plan"] == "PRO" %}
+
+                            <span class="badge badge-purple">
+
+                                PRO
+
+                            </span>
+
+
+                            {% elif subscription["plan"] == "ENTERPRISE" %}
+
+                            <span class="badge badge-blue">
+
+                                ENTERPRISE
+
+                            </span>
+
+
+                            {% else %}
+
+                            <span class="badge badge-gray">
+
+                                FREE
+
+                            </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                        <td>
+
+                            {{ subscription["start_date"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ subscription["end_date"] or "—" }}
+
+                        </td>
+
+
+                        <td>
+
+
+                            {% if subscription["status"] == "ACTIVE" %}
+
+                            <span class="badge badge-green">
+
+                                ACTIVE
+
+                            </span>
+
+
+                            {% elif subscription["status"] == "EXPIRED" %}
+
+                            <span class="badge badge-yellow">
+
+                                EXPIRED
+
+                            </span>
+
+
+                            {% elif subscription["status"] == "CANCELLED" %}
+
+                            <span class="badge badge-red">
+
+                                CANCELLED
+
+                            </span>
+
+
+                            {% else %}
+
+                            <span class="badge badge-gray">
+
+                                {{ subscription["status"] }}
+
+                            </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+
+                No subscriptions found.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         FOOTER
+    ================================================== -->
+
+    <div class="footer">
+
+        FoodLoop Admin Panel • Share Food • Reduce Waste 🌿
+
+    </div>
+
+
+</main>
+
+
+</body>
+
+</html>

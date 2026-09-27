@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodLoop Register</title>
+</head>
+
+<body>
+
+    <h1>FoodLoop Registration</h1>
+
+    <form method="POST" action="/register">
+
+        <p>
+            <label>Full Name</label><br>
+            <input type="text" name="name" required>
+        </p>
+
+        <p>
+            <label>Email</label><br>
+            <input type="email" name="email" required>
+        </p>
+
+        <p>
+            <label>Phone</label><br>
+            <input type="text" name="phone">
+        </p>
+
+        <p>
+            <label>Password</label><br>
+            <input type="password" name="password" required>
+        </p>
+
+        <p>
+            <label>Role</label><br>
+
+            <select name="role" required>
+                <option value="">Select Role</option>
+                <option value="RESTAURANT">Restaurant</option>
+                <option value="NGO">NGO</option>
+                <option value="VOLUNTEER">Volunteer</option>
+            </select>
+        </p>
+
+        <button type="submit">Create Account</button>
+
+    </form>
+
+</body>
+</html>

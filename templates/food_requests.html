@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Food Requests | FoodLoop</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .requests-page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px 50px;
+        }
+
+        .requests-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .foodloop-logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .requests-header h1 {
+            margin-bottom: 8px;
+        }
+
+        .requests-header p {
+            color: #666;
+        }
+
+        .requests-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(320px, 1fr)
+            );
+            gap: 22px;
+        }
+
+        .request-card {
+            background: #ffffff;
+            border: 1px solid #eeeeee;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+        }
+
+        .request-card h2 {
+            margin-top: 0;
+            color: #1f7a4d;
+        }
+
+        .section-title {
+            color: #333;
+            margin-top: 22px;
+            margin-bottom: 12px;
+            font-size: 17px;
+        }
+
+        .info-row {
+            padding: 9px 0;
+            border-bottom: 1px solid #eeeeee;
+            color: #555;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row strong {
+            color: #222;
+        }
+
+        .ngo-box {
+            background: #f5faf7;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 12px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status-pending {
+            background: #fff4cc;
+            color: #9a6b00;
+        }
+
+        .status-approved {
+            background: #dff6e8;
+            color: #187642;
+        }
+
+        .status-rejected {
+            background: #ffe1e1;
+            color: #c62828;
+        }
+
+        .status-completed {
+            background: #dcecff;
+            color: #1769aa;
+        }
+
+        .action-area {
+            margin-top: 22px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            border: none;
+            border-radius: 10px;
+            padding: 11px 17px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .approve-button {
+            background: #1f7a4d;
+            color: white;
+        }
+
+        .approve-button:hover {
+            background: #16633d;
+        }
+
+        .reject-button {
+            background: #ffe1e1;
+            color: #c62828;
+        }
+
+        .reject-button:hover {
+            background: #ffd0d0;
+        }
+
+        .assign-button {
+            display: inline-block;
+            background: #1f7a4d;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 10px;
+            padding: 11px 17px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .assign-button:hover {
+            background: #16633d;
+        }
+
+        .status-message {
+            margin-top: 18px;
+            padding: 12px 14px;
+            background: #f7f9f8;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .empty-state {
+            background: #ffffff;
+            text-align: center;
+            padding: 55px 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+        }
+
+        .page-actions {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .nav-button {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 16px;
+            border: 1px solid #1f7a4d;
+            border-radius: 10px;
+            color: #1f7a4d !important;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-button:hover {
+            background: #eef8f2;
+        }
+
+        @media (max-width: 600px) {
+
+            .requests-page {
+                padding: 20px 12px 40px;
+            }
+
+            .requests-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .request-card {
+                padding: 20px;
+            }
+
+            .action-area {
+                flex-direction: column;
+            }
+
+            .action-button,
+            .assign-button {
+                width: 100%;
+                box-sizing: border-box;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="requests-page">
+
+    <!-- HEADER -->
+
+    <div class="requests-header">
+
+        <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="FoodLoop Logo"
+            class="foodloop-logo">
+
+        <h1>📋 Food Requests</h1>
+
+        <p>
+            Welcome, {{ session["name"] }} 👋
+        </p>
+
+    </div>
+
+
+    <!-- REQUEST LIST -->
+
+    {% if requests %}
+
+        <div class="requests-grid">
+
+            {% for req in requests %}
+
+                <div class="request-card">
+
+                    <!-- FOOD INFORMATION -->
+
+                    <h2>
+                        🍱 {{ req["food_name"] }}
+                    </h2>
+
+                    <div class="info-row">
+                        <strong>Food Type:</strong>
+                        {{ req["food_type"] }}
+                    </div>
+
+                    <div class="info-row">
+                        <strong>Requested Quantity:</strong>
+                        {{ req["requested_quantity"] }}
+                        {{ req["quantity_unit"] }}
+                    </div>
+
+                    <div class="info-row">
+                        <strong>Available Quantity:</strong>
+                        {{ req["quantity"] }}
+                        {{ req["quantity_unit"] }}
+                    </div>
+
+
+                    <!-- NGO INFORMATION -->
+
+                    <h3 class="section-title">
+                        🏢 NGO Details
+                    </h3>
+
+                    <div class="ngo-box">
+
+                        <div class="info-row">
+                            <strong>NGO Name:</strong>
+                            {{ req["ngo_name"] }}
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Phone:</strong>
+                            {{ req["ngo_phone"] }}
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Email:</strong>
+                            {{ req["ngo_email"] }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- REQUEST INFORMATION -->
+
+                    <h3 class="section-title">
+                        📅 Request Information
+                    </h3>
+
+                    <div class="info-row">
+                        <strong>Request Date:</strong>
+                        {{ req["requested_at"] }}
+                    </div>
+
+                    <div class="info-row">
+
+                        <strong>Status:</strong>
+
+                        {% if req["request_status"] == "PENDING" %}
+
+                            <span class="status-badge status-pending">
+                                ⏳ PENDING
+                            </span>
+
+                        {% elif req["request_status"] == "APPROVED" %}
+
+                            <span class="status-badge status-approved">
+                                ✅ APPROVED
+                            </span>
+
+                        {% elif req["request_status"] == "REJECTED" %}
+
+                            <span class="status-badge status-rejected">
+                                ❌ REJECTED
+                            </span>
+
+                        {% elif req["request_status"] == "COMPLETED" %}
+
+                            <span class="status-badge status-completed">
+                                🎉 COMPLETED
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge">
+                                {{ req["request_status"] }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- ACTIONS -->
+
+                    {% if req["request_status"] == "PENDING" %}
+
+                        <div class="action-area">
+
+                            <form
+                                method="POST"
+                                action="/update-request/{{ req['request_id'] }}/approve"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="action-button approve-button">
+
+                                    ✅ Approve Request
+
+                                </button>
+
+                            </form>
+
+
+                            <form
+                                method="POST"
+                                action="/update-request/{{ req['request_id'] }}/reject"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="action-button reject-button">
+
+                                    ❌ Reject Request
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+
+                    {% elif req["request_status"] == "APPROVED" %}
+
+                        <div class="status-message">
+                            ✅ <strong>Request Approved</strong>
+                            <br>
+                            You can now assign a volunteer for pickup.
+                        </div>
+
+                        <div class="action-area">
+
+                            <a
+                                href="/assign-volunteer/{{ req['request_id'] }}"
+                                class="assign-button">
+
+                                🚚 Assign Volunteer
+
+                            </a>
+
+                        </div>
+
+
+                    {% elif req["request_status"] == "REJECTED" %}
+
+                        <div class="status-message">
+                            ❌ <strong>Request Rejected</strong>
+                            <br>
+                            This food request was rejected.
+                        </div>
+
+
+                    {% elif req["request_status"] == "COMPLETED" %}
+
+                        <div class="status-message">
+                            🎉 <strong>Request Completed</strong>
+                            <br>
+                            Food has been successfully delivered.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-state">
+
+            <h2>📭 No Food Requests</h2>
+
+            <p>
+                No NGO has requested your donated food yet.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- NAVIGATION -->
+
+    <div class="page-actions">
+
+        <a
+            href="/dashboard"
+            class="nav-button">
+
+            ← Dashboard
+
+        </a>
+
+        <a
+            href="/donations"
+            class="nav-button">
+
+            📦 My Donations
+
+        </a>
+
+        <a
+            href="/logout"
+            class="nav-button">
+
+            Logout
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

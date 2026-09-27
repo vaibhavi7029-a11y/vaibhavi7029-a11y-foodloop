@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Request Food | FoodLoop</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .request-page {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 30px 20px 50px;
+        }
+
+        .request-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .foodloop-logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .request-header h1 {
+            margin-bottom: 8px;
+        }
+
+        .request-header p {
+            color: #666;
+        }
+
+        .food-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eeeeee;
+            margin-bottom: 25px;
+        }
+
+        .food-card h2 {
+            margin-top: 0;
+            color: #1f7a4d;
+            font-size: 27px;
+        }
+
+        .food-info {
+            padding: 12px 0;
+            border-bottom: 1px solid #eeeeee;
+            color: #555;
+        }
+
+        .food-info:last-child {
+            border-bottom: none;
+        }
+
+        .food-info strong {
+            color: #222;
+        }
+
+        .description {
+            background: #f5faf7;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 18px;
+            color: #555;
+        }
+
+        .request-form-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eeeeee;
+        }
+
+        .request-form-card h2 {
+            margin-top: 0;
+            color: #222;
+        }
+
+        .quantity-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .quantity-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px 15px;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .quantity-input:focus {
+            border-color: #1f7a4d;
+        }
+
+        .unit-text {
+            display: block;
+            margin-top: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .submit-button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            background: #1f7a4d;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background: #16633d;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 25px;
+            color: #1f7a4d;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+
+            .request-page {
+                padding: 20px 12px 40px;
+            }
+
+            .food-card,
+            .request-form-card {
+                padding: 20px;
+            }
+
+            .food-card h2 {
+                font-size: 23px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="request-page">
+
+    <!-- Header -->
+
+    <div class="request-header">
+
+        <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="FoodLoop Logo"
+            class="foodloop-logo">
+
+        <h1>🙋 Request Surplus Food</h1>
+
+        <p>
+            Request available food from our FoodLoop partners.
+        </p>
+
+    </div>
+
+
+    <!-- Food Details -->
+
+    <div class="food-card">
+
+        <h2>
+            🍱 {{ donation["food_name"] }}
+        </h2>
+
+        <div class="food-info">
+            <strong>Food Type:</strong>
+            {{ donation["food_type"] }}
+        </div>
+
+        <div class="food-info">
+            <strong>Available Quantity:</strong>
+            {{ donation["quantity"] }}
+            {{ donation["quantity_unit"] }}
+        </div>
+
+        <div class="food-info">
+            <strong>Donor:</strong>
+            {{ donation["donor_name"] }}
+        </div>
+
+        <div class="food-info">
+            <strong>Available Until:</strong>
+            {{ donation["available_until"] }}
+        </div>
+
+        {% if donation["description"] %}
+
+            <div class="description">
+
+                <strong>Description:</strong>
+
+                <p>
+                    {{ donation["description"] }}
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Request Form -->
+
+    <div class="request-form-card">
+
+        <h2>📦 Request Quantity</h2>
+
+        <p>
+            Enter the amount of food your NGO needs.
+        </p>
+
+        <form method="POST">
+
+            <label
+                for="requested_quantity"
+                class="quantity-label">
+
+                Requested Quantity
+
+            </label>
+
+            <input
+                id="requested_quantity"
+                class="quantity-input"
+                type="number"
+                name="requested_quantity"
+                min="1"
+                max="{{ donation['quantity'] }}"
+                placeholder="Enter quantity"
+                required
+            >
+
+            <span class="unit-text">
+                Unit: {{ donation["quantity_unit"] }}
+            </span>
+
+            <button
+                type="submit"
+                class="submit-button">
+
+                🙋 Submit Food Request
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- Back -->
+
+    <a
+        href="/available-food"
+        class="back-link">
+
+        ← Back to Available Food
+
+    </a>
+
+</div>
+
+</body>
+
+</html>

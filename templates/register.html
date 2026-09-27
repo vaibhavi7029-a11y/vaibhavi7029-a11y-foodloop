@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FoodLoop | Register</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #f0faf4,
+                #e7f7ed
+            );
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 25px 15px;
+        }
+
+        .register-wrapper {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .register-card {
+            background: white;
+            width: 100%;
+
+            padding: 38px;
+
+            border-radius: 24px;
+
+            box-shadow:
+                0 15px 45px rgba(0, 90, 55, 0.12);
+
+            border: 1px solid #e5f1e9;
+        }
+
+        /* Logo */
+
+        .foodloop-brand {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            gap: 12px;
+
+            margin-bottom: 25px;
+        }
+
+        .foodloop-logo-icon {
+            width: 52px;
+            height: 52px;
+
+            background: #e8f7ee;
+
+            border: 2px solid #b8e6c8;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 28px;
+        }
+
+        .foodloop-logo-text h2 {
+            margin: 0;
+
+            color: #087443;
+
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .foodloop-logo-text span {
+            display: block;
+
+            margin-top: 3px;
+
+            color: #718078;
+
+            font-size: 11px;
+        }
+
+        /* Heading */
+
+        .register-card h1 {
+            text-align: center;
+
+            margin: 0;
+
+            color: #18352a;
+
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+
+            color: #718078;
+
+            margin: 8px 0 25px;
+
+            font-size: 14px;
+        }
+
+        /* Error */
+
+        .error-message {
+            background: #fff1f1;
+
+            color: #c62828;
+
+            border: 1px solid #ffd0d0;
+
+            padding: 11px 14px;
+
+            border-radius: 9px;
+
+            margin-bottom: 18px;
+
+            font-size: 14px;
+
+            text-align: center;
+        }
+
+        /* Form */
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #29483b;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+
+            padding: 12px 14px;
+
+            border: 1px solid #d5e5dc;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            background: #fbfdfc;
+
+            transition: 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #15965b;
+
+            box-shadow:
+                0 0 0 3px rgba(21, 150, 91, 0.10);
+
+            background: white;
+        }
+
+        /* Organization info */
+
+        .organization-note {
+            background: #f0faf4;
+
+            border-left: 4px solid #15965b;
+
+            padding: 10px 12px;
+
+            border-radius: 7px;
+
+            color: #557064;
+
+            font-size: 12px;
+
+            margin-bottom: 17px;
+        }
+
+        /* Button */
+
+        .register-btn {
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #087443;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            margin-top: 5px;
+        }
+
+        .register-btn:hover {
+            background: #065d36;
+
+            transform: translateY(-1px);
+        }
+
+        /* Login */
+
+        .login-text {
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #718078;
+
+            font-size: 14px;
+        }
+
+        .login-text a {
+            color: #087443;
+
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+        .login-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile */
+
+        @media (max-width: 520px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .register-card {
+                padding: 28px 22px;
+            }
+
+            .register-card h1 {
+                font-size: 24px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <div class="register-wrapper">
+
+        <div class="register-card">
+
+            <!-- FoodLoop Logo -->
+
+            <div class="foodloop-brand">
+
+                <div class="foodloop-logo-icon">
+                    🌿
+                </div>
+
+                <div class="foodloop-logo-text">
+
+                    <h2>FoodLoop</h2>
+
+                    <span>
+                        Share Food • Reduce Waste
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Heading -->
+
+            <h1>Create Account</h1>
+
+            <p class="subtitle">
+                Join FoodLoop and help reduce food waste
+            </p>
+
+
+            <!-- Error -->
+
+            {% if error %}
+
+            <div class="error-message">
+                {{ error }}
+            </div>
+
+            {% endif %}
+
+
+            <!-- Registration Form -->
+
+            <form method="POST">
+
+
+                <!-- Name -->
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Email -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Phone -->
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="Enter phone number"
+                    >
+
+                </div>
+
+
+                <!-- Role -->
+
+                <div class="form-group">
+
+                    <label for="role">
+                        Select Your Role
+                    </label>
+
+                    <select
+                        id="role"
+                        name="role"
+                        required
+                    >
+
+                        <option value="">
+                            Select role
+                        </option>
+
+                        <option value="RESTAURANT">
+                            🍽️ Restaurant / Hotel
+                        </option>
+
+                        <option value="NGO">
+                            🤝 NGO
+                        </option>
+
+                        <option value="VOLUNTEER">
+                            🚚 Volunteer
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Organization -->
+
+                <div class="organization-note">
+
+                    For Restaurant and NGO accounts,
+                    enter your organization name below.
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="organization_name">
+                        Organization Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="organization_name"
+                        name="organization_name"
+                        placeholder="e.g. Hotel 3 Leaves"
+                    >
+
+                </div>
+
+
+                <!-- Submit -->
+
+                <button
+                    type="submit"
+                    class="register-btn">
+
+                    Create Account
+
+                </button>
+
+            </form>
+
+
+            <!-- Login -->
+
+            <div class="login-text">
+
+                Already have an account?
+
+                <a href="/login">
+                    Login
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

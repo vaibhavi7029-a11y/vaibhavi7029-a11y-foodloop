@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Pickups | FoodLoop</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        body {
+            background: #f4f8f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .pickups-page {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        /* Header */
+
+        .pickups-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .foodloop-logo {
+            width: 160px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .pickups-header h1 {
+            color: #198754;
+            margin-bottom: 8px;
+        }
+
+        .pickups-header p {
+            color: #666;
+        }
+
+        /* Grid */
+
+        .pickup-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(320px, 1fr)
+            );
+            gap: 22px;
+        }
+
+        /* Card */
+
+        .pickup-card {
+            background: white;
+            border: 1px solid #e5ebe7;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+        }
+
+        .food-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+
+        .pickup-card h2 {
+            color: #198754;
+            margin-top: 0;
+            margin-bottom: 18px;
+        }
+
+        /* Information */
+
+        .info-row {
+            padding: 10px 0;
+            border-bottom: 1px solid #eeeeee;
+            color: #555;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row strong {
+            color: #222;
+        }
+
+        /* Status */
+
+        .status-badge {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status-assigned {
+            background: #fff4cc;
+            color: #946c00;
+        }
+
+        .status-on-way {
+            background: #e1f0ff;
+            color: #1769aa;
+        }
+
+        .status-collected {
+            background: #e8e0ff;
+            color: #6842a5;
+        }
+
+        .status-delivered {
+            background: #dff5e7;
+            color: #146c43;
+        }
+
+        .status-cancelled {
+            background: #ffe1e1;
+            color: #c62828;
+        }
+
+        /* Action Area */
+
+        .action-area {
+            margin-top: 22px;
+        }
+
+        .action-button {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 10px;
+            padding: 13px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .start-button {
+            background: #198754;
+            color: white;
+        }
+
+        .start-button:hover {
+            background: #157347;
+        }
+
+        .collect-button {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .collect-button:hover {
+            background: #0b5ed7;
+        }
+
+        .deliver-button {
+            background: #198754;
+            color: white;
+        }
+
+        .deliver-button:hover {
+            background: #157347;
+        }
+
+        .completed-message {
+            margin-top: 20px;
+            padding: 14px;
+            background: #eef8f1;
+            border-radius: 10px;
+            color: #146c43;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Empty State */
+
+        .empty-state {
+            background: white;
+            text-align: center;
+            padding: 55px 25px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+        }
+
+        .empty-icon {
+            font-size: 55px;
+        }
+
+        .empty-state h2 {
+            color: #198754;
+        }
+
+        .empty-state p {
+            color: #666;
+        }
+
+        /* Navigation */
+
+        .page-actions {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .nav-button {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 16px;
+            border: 1px solid #198754;
+            border-radius: 10px;
+            color: #198754 !important;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-button:hover {
+            background: #eef8f2;
+        }
+
+        /* Mobile */
+
+        @media (max-width: 600px) {
+
+            .pickups-page {
+                margin: 20px 10px;
+                padding: 10px;
+            }
+
+            .pickup-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pickup-card {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="pickups-page">
+
+
+        <!-- HEADER -->
+
+        <div class="pickups-header">
+
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="FoodLoop Logo"
+                class="foodloop-logo"
+            >
+
+            <h1>🚚 My Pickups</h1>
+
+            <p>
+                Welcome, {{ session["name"] }} 👋
+            </p>
+
+        </div>
+
+
+        {% if pickups %}
+
+
+            <div class="pickup-grid">
+
+
+                {% for pickup in pickups %}
+
+
+                    <div class="pickup-card">
+
+
+                        <!-- Food -->
+
+                        <div class="food-icon">
+                            🍱
+                        </div>
+
+                        <h2>
+                            {{ pickup["food_name"] }}
+                        </h2>
+
+
+                        <!-- Food Information -->
+
+                        <div class="info-row">
+
+                            <strong>Food Type:</strong>
+
+                            {{ pickup["food_type"] }}
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <strong>Quantity:</strong>
+
+                            {{ pickup["quantity"] }}
+                            {{ pickup["quantity_unit"] }}
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <strong>Donor:</strong>
+
+                            {{ pickup["donor_name"] }}
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <strong>Pickup Time:</strong>
+
+                            {{ pickup["pickup_time"] }}
+
+                        </div>
+
+
+                        {% if pickup["notes"] %}
+
+                            <div class="info-row">
+
+                                <strong>Notes:</strong>
+
+                                {{ pickup["notes"] }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- STATUS -->
+
+                        {% if pickup["status"] == "ASSIGNED" %}
+
+                            <span class="status-badge status-assigned">
+                                🟡 ASSIGNED
+                            </span>
+
+
+                        {% elif pickup["status"] == "ON_THE_WAY" %}
+
+                            <span class="status-badge status-on-way">
+                                🚚 ON THE WAY
+                            </span>
+
+
+                        {% elif pickup["status"] == "COLLECTED" %}
+
+                            <span class="status-badge status-collected">
+                                📦 COLLECTED
+                            </span>
+
+
+                        {% elif pickup["status"] == "DELIVERED" %}
+
+                            <span class="status-badge status-delivered">
+                                ✅ DELIVERED
+                            </span>
+
+
+                        {% elif pickup["status"] == "CANCELLED" %}
+
+                            <span class="status-badge status-cancelled">
+                                ❌ CANCELLED
+                            </span>
+
+                        {% endif %}
+
+
+                        <!-- ACTIONS -->
+
+                        {% if pickup["status"] == "ASSIGNED" %}
+
+                            <div class="action-area">
+
+                                <a
+                                    href="/update-pickup/{{ pickup['pickup_id'] }}/start"
+                                    class="action-button start-button"
+                                >
+                                    🚚 Start Pickup
+                                </a>
+
+                            </div>
+
+
+                        {% elif pickup["status"] == "ON_THE_WAY" %}
+
+                            <div class="action-area">
+
+                                <a
+                                    href="/update-pickup/{{ pickup['pickup_id'] }}/collect"
+                                    class="action-button collect-button"
+                                >
+                                    📦 Food Collected
+                                </a>
+
+                            </div>
+
+
+                        {% elif pickup["status"] == "COLLECTED" %}
+
+                            <div class="action-area">
+
+                                <a
+                                    href="/update-pickup/{{ pickup['pickup_id'] }}/deliver"
+                                    class="action-button deliver-button"
+                                >
+                                    ✅ Mark Delivered
+                                </a>
+
+                            </div>
+
+
+                        {% elif pickup["status"] == "DELIVERED" %}
+
+                            <div class="completed-message">
+
+                                🎉 Food Successfully Delivered!
+
+                                <br>
+
+                                Thank you for helping reduce food waste. 💚
+
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🚚
+                </div>
+
+                <h2>
+                    No Pickups Assigned
+                </h2>
+
+                <p>
+                    You currently don't have any food pickups assigned.
+                </p>
+
+            </div>
+
+
+        {% endif %}
+
+
+        <!-- NAVIGATION -->
+
+        <div class="page-actions">
+
+            <a
+                href="/dashboard"
+                class="nav-button"
+            >
+                ← Dashboard
+            </a>
+
+            <a
+                href="/logout"
+                class="nav-button"
+            >
+                Logout
+            </a>
+
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>

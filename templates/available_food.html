@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Available Food | FoodLoop</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .available-page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px 50px;
+        }
+
+        .available-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .foodloop-logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .available-header h1 {
+            margin-bottom: 8px;
+        }
+
+        .available-header p {
+            color: #666;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(300px, 1fr)
+            );
+            gap: 22px;
+        }
+
+        .food-card {
+            background: #ffffff;
+            border: 1px solid #eeeeee;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+            transition: transform 0.2s ease,
+                        box-shadow 0.2s ease;
+        }
+
+        .food-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.10);
+        }
+
+        .food-card h2 {
+            margin-top: 0;
+            color: #1f7a4d;
+            font-size: 24px;
+        }
+
+        .food-info {
+            padding: 9px 0;
+            border-bottom: 1px solid #eeeeee;
+            color: #555;
+        }
+
+        .food-info:last-of-type {
+            border-bottom: none;
+        }
+
+        .food-info strong {
+            color: #222;
+        }
+
+        .quantity-box {
+            background: #eef8f2;
+            padding: 13px;
+            border-radius: 10px;
+            margin: 15px 0;
+            color: #1f7a4d;
+            font-weight: 700;
+        }
+
+        .description-box {
+            background: #f7f9f8;
+            padding: 14px;
+            border-radius: 10px;
+            margin-top: 15px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .request-button {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            margin-top: 20px;
+            padding: 12px 18px;
+            background: #1f7a4d;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .request-button:hover {
+            background: #16633d;
+        }
+
+        .empty-state {
+            background: #ffffff;
+            text-align: center;
+            padding: 55px 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+        }
+
+        .empty-state h2 {
+            margin-bottom: 10px;
+        }
+
+        .page-actions {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .nav-button {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 16px;
+            border: 1px solid #1f7a4d;
+            border-radius: 10px;
+            color: #1f7a4d !important;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-button:hover {
+            background: #eef8f2;
+        }
+
+        @media (max-width: 600px) {
+
+            .available-page {
+                padding: 20px 12px 40px;
+            }
+
+            .food-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .food-card {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="available-page">
+
+    <!-- HEADER -->
+
+    <div class="available-header">
+
+        <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="FoodLoop Logo"
+            class="foodloop-logo">
+
+        <h1>🍱 Available Surplus Food</h1>
+
+        <p>
+            Find available surplus food and request what your NGO needs.
+        </p>
+
+        <p>
+            Welcome, {{ session["name"] }} 👋
+        </p>
+
+    </div>
+
+
+    <!-- FOOD LIST -->
+
+    {% if donations %}
+
+        <div class="food-grid">
+
+            {% for donation in donations %}
+
+                <div class="food-card">
+
+                    <h2>
+                        🍱 {{ donation["food_name"] }}
+                    </h2>
+
+
+                    <div class="food-info">
+
+                        <strong>Food Type:</strong>
+                        {{ donation["food_type"] }}
+
+                    </div>
+
+
+                    <div class="quantity-box">
+
+                        📦 Available Quantity:
+
+                        {{ donation["quantity"] }}
+                        {{ donation["quantity_unit"] }}
+
+                    </div>
+
+
+                    <div class="food-info">
+
+                        <strong>Available Until:</strong>
+                        {{ donation["available_until"] }}
+
+                    </div>
+
+
+                    <div class="food-info">
+
+                        <strong>Donor:</strong>
+                        {{ donation["donor_name"] }}
+
+                    </div>
+
+
+                    {% if donation["description"] %}
+
+                        <div class="description-box">
+
+                            <strong>Description:</strong>
+
+                            <p>
+                                {{ donation["description"] }}
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <a
+                        href="/request-food/{{ donation['donation_id'] }}"
+                        class="request-button">
+
+                        🙋 Request This Food
+
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-state">
+
+            <h2>📭 No Food Available</h2>
+
+            <p>
+                There are currently no available surplus food donations.
+            </p>
+
+            <p>
+                Please check again later.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- NAVIGATION -->
+
+    <div class="page-actions">
+
+        <a
+            href="/dashboard"
+            class="nav-button">
+
+            ← Dashboard
+
+        </a>
+
+        <a
+            href="/my-requests"
+            class="nav-button">
+
+            📋 My Requests
+
+        </a>
+
+        <a
+            href="/logout"
+            class="nav-button">
+
+            Logout
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

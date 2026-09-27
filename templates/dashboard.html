@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <title>FoodLoop Dashboard</title>
+
+
+    <!-- =========================
+         FOODLOOP LOGO STYLE
+         ========================= -->
+
+    <style>
+
+        .foodloop-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .foodloop-logo-icon {
+            width: 48px;
+            height: 48px;
+
+            background: #e8f7ee;
+
+            border: 2px solid #b8e6c8;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 27px;
+
+            box-shadow: 0 4px 12px rgba(0, 100, 60, 0.10);
+        }
+
+
+        .foodloop-logo-text h2 {
+            margin: 0;
+
+            color: #087443;
+
+            font-size: 25px;
+
+            font-weight: 800;
+
+            letter-spacing: -0.5px;
+        }
+
+
+        .foodloop-logo-text span {
+            display: block;
+
+            margin-top: 2px;
+
+            color: #6b8178;
+
+            font-size: 11px;
+
+            font-weight: 500;
+        }
+
+
+        .role-banner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            margin: 20px 0;
+
+            padding: 15px 20px;
+
+            background: #f0faf4;
+
+            border: 1px solid #d5efdf;
+
+            border-radius: 14px;
+
+            color: #245c43;
+        }
+
+
+        .role-banner strong {
+            color: #087443;
+        }
+
+
+        .role-banner span {
+            color: #71857b;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     TOP BAR
+     ===================================================== -->
+
+<header class="topbar">
+
+
+    <!-- FOODLOOP BRAND -->
+
+    <div class="foodloop-brand">
+
+        <div class="foodloop-logo-icon">
+            🌿
+        </div>
+
+
+        <div class="foodloop-logo-text">
+
+            <h2>
+                FoodLoop
+            </h2>
+
+            <span>
+                Share Food • Reduce Waste
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- USER AREA -->
+
+    <div class="user-area">
+
+        <div class="user-avatar">
+            👤
+        </div>
+
+
+        <div class="user-info">
+
+            <small>
+                Welcome,
+            </small>
+
+            <strong>
+                {{ session["name"] }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+</header>
+
+
+
+<div class="layout">
+
+
+
+<!-- =====================================================
+     SIDEBAR
+     ===================================================== -->
+
+<aside class="sidebar">
+
+
+    <!-- SIDEBAR MENU -->
+
+    <div class="sidebar-menu">
+
+
+        <!-- DASHBOARD -->
+
+        <a href="/dashboard"
+           class="active">
+
+            <span class="sidebar-icon">
+                🏠
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+
+        </a>
+
+
+
+        <!-- =========================
+             RESTAURANT MENU
+             ========================= -->
+
+        {% if session["role"] == "RESTAURANT" %}
+
+
+        <a href="/add-donation">
+
+            <span class="sidebar-icon">
+                🍱
+            </span>
+
+            <span>
+                Add Surplus Food
+            </span>
+
+        </a>
+
+
+        <a href="/donations">
+
+            <span class="sidebar-icon">
+                📦
+            </span>
+
+            <span>
+                My Donations
+            </span>
+
+        </a>
+
+
+        <a href="/food-requests">
+
+            <span class="sidebar-icon">
+                📋
+            </span>
+
+            <span>
+                Food Requests
+            </span>
+
+        </a>
+
+
+
+        <!-- =========================
+             NGO MENU
+             ========================= -->
+
+        {% elif session["role"] == "NGO" %}
+
+
+        <a href="/available-food">
+
+            <span class="sidebar-icon">
+                🍱
+            </span>
+
+            <span>
+                Available Food
+            </span>
+
+        </a>
+
+
+        <a href="/my-requests">
+
+            <span class="sidebar-icon">
+                📋
+            </span>
+
+            <span>
+                My Requests
+            </span>
+
+        </a>
+
+
+
+        <!-- =========================
+             VOLUNTEER MENU
+             ========================= -->
+
+        {% elif session["role"] == "VOLUNTEER" %}
+
+
+        <a href="/pickups">
+
+            <span class="sidebar-icon">
+                🚚
+            </span>
+
+            <span>
+                My Pickups
+            </span>
+
+        </a>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         SIDEBAR MESSAGE
+         ================================================= -->
+
+    <div class="sidebar-bottom">
+
+
+        <div class="leaf">
+            🌱
+        </div>
+
+
+        <p>
+
+            Less Food Waste
+            <br>
+            More Smiles
+
+        </p>
+
+
+        <div>
+            ❤️
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         LOGOUT
+         ================================================= -->
+
+    <a href="/logout">
+
+        <span class="sidebar-icon">
+            🚪
+        </span>
+
+        <span>
+            Logout
+        </span>
+
+    </a>
+
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN CONTENT
+     ================================================= -->
+
+<main class="main-content">
+
+
+
+<!-- =====================================================
+     HERO SECTION
+     ================================================= -->
+
+<section class="hero">
+
+
+    <div>
+
+
+        <h1>
+
+            Welcome back,
+
+            <span>
+                {{ session["name"] }}
+            </span>
+
+            🌿
+
+        </h1>
+
+
+        <p>
+
+            Together we can fight food waste and
+            feed those in need.
+
+            <br>
+
+            <strong>
+                Every meal counts!
+            </strong>
+
+        </p>
+
+
+    </div>
+
+
+    <div class="hero-leaf">
+        🍃
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     ROLE BANNER
+     ================================================= -->
+
+<section class="role-banner">
+
+
+    {% if session["role"] == "RESTAURANT" %}
+
+        <span>
+            🍽️
+        </span>
+
+        <strong>
+            Restaurant Dashboard
+        </strong>
+
+        <span>
+            Share surplus food with NGOs.
+        </span>
+
+
+    {% elif session["role"] == "NGO" %}
+
+        <span>
+            🤝
+        </span>
+
+        <strong>
+            NGO Dashboard
+        </strong>
+
+        <span>
+            Find available surplus food and request it.
+        </span>
+
+
+    {% elif session["role"] == "VOLUNTEER" %}
+
+        <span>
+            🚚
+        </span>
+
+        <strong>
+            Volunteer Dashboard
+        </strong>
+
+        <span>
+            Help collect and deliver surplus food.
+        </span>
+
+
+    {% endif %}
+
+
+</section>
+
+
+
+<!-- =====================================================
+     STATISTICS
+     ===================================================== -->
+
+<section class="stats-grid">
+
+
+    <!-- FOOD DONATIONS -->
+
+    <div class="stat-card">
+
+
+        <div class="stat-top">
+
+            <div class="stat-icon green">
+                🍱
+            </div>
+
+        </div>
+
+
+        <h3>
+            Food Donations
+        </h3>
+
+
+        <div class="stat-number">
+            ♡
+        </div>
+
+
+        <div class="stat-label">
+
+            Helping reduce food waste
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- FOOD REQUESTS -->
+
+    <div class="stat-card">
+
+
+        <div class="stat-top">
+
+            <div class="stat-icon blue">
+                📋
+            </div>
+
+        </div>
+
+
+        <h3>
+            Food Requests
+        </h3>
+
+
+        <div class="stat-number">
+            ♡
+        </div>
+
+
+        <div class="stat-label">
+
+            Connecting food with NGOs
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- VOLUNTEERS -->
+
+    <div class="stat-card">
+
+
+        <div class="stat-top">
+
+            <div class="stat-icon orange">
+                👥
+            </div>
+
+        </div>
+
+
+        <h3>
+            Volunteers
+        </h3>
+
+
+        <div class="stat-number">
+            ♡
+        </div>
+
+
+        <div class="stat-label">
+
+            Helping deliver food
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- FOOD SAVED -->
+
+    <div class="stat-card">
+
+
+        <div class="stat-top">
+
+            <div class="stat-icon purple">
+                🌱
+            </div>
+
+        </div>
+
+
+        <h3>
+            Food Saved
+        </h3>
+
+
+        <div class="stat-number">
+            ♡
+        </div>
+
+
+        <div class="stat-label">
+
+            Every contribution matters
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     QUICK ACTIONS
+     ===================================================== -->
+
+<section class="section-card">
+
+
+    <div class="section-title">
+
+
+        <h2>
+            Quick Actions
+        </h2>
+
+
+        <p>
+            Manage your FoodLoop activities easily.
+        </p>
+
+
+    </div>
+
+
+
+    <div class="quick-actions">
+
+
+
+        <!-- =========================
+             RESTAURANT ACTIONS
+             ========================= -->
+
+        {% if session["role"] == "RESTAURANT" %}
+
+
+        <a href="/add-donation"
+           class="action-card action-green">
+
+
+            <h3>
+                🍱 Add Surplus Food
+            </h3>
+
+
+            <p>
+                Share available surplus food
+            </p>
+
+
+        </a>
+
+
+
+        <a href="/food-requests"
+           class="action-card action-blue">
+
+
+            <h3>
+                📋 Food Requests
+            </h3>
+
+
+            <p>
+                View NGO food requests
+            </p>
+
+
+        </a>
+
+
+
+        <a href="/donations"
+           class="action-card action-orange">
+
+
+            <h3>
+                📦 My Donations
+            </h3>
+
+
+            <p>
+                Manage available food
+            </p>
+
+
+        </a>
+
+
+
+        <!-- =========================
+             NGO ACTIONS
+             ========================= -->
+
+        {% elif session["role"] == "NGO" %}
+
+
+        <a href="/available-food"
+           class="action-card action-green">
+
+
+            <h3>
+                🍱 Available Food
+            </h3>
+
+
+            <p>
+                Find available surplus food
+            </p>
+
+
+        </a>
+
+
+
+        <a href="/my-requests"
+           class="action-card action-blue">
+
+
+            <h3>
+                📋 My Requests
+            </h3>
+
+
+            <p>
+                Track your food requests
+            </p>
+
+
+        </a>
+
+
+
+        <!-- =========================
+             VOLUNTEER ACTION
+             ========================= -->
+
+        {% elif session["role"] == "VOLUNTEER" %}
+
+
+        <a href="/pickups"
+           class="action-card action-green">
+
+
+            <h3>
+                🚚 My Pickups
+            </h3>
+
+
+            <p>
+                Manage food pickups and deliveries
+            </p>
+
+
+        </a>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     MISSION + IMPACT
+     ===================================================== -->
+
+<section class="content-grid">
+
+
+
+    <!-- =========================
+         FOODLOOP MISSION
+         ========================= -->
+
+    <div class="list-card">
+
+
+        <div class="list-header">
+
+            <h2>
+                🌱 FoodLoop Mission
+            </h2>
+
+        </div>
+
+
+
+        <!-- REDUCE FOOD WASTE -->
+
+        <div class="food-item">
+
+
+            <div class="food-info">
+
+
+                <div class="food-icon">
+                    🍱
+                </div>
+
+
+                <div>
+
+
+                    <h4>
+                        Reduce Food Waste
+                    </h4>
+
+
+                    <p>
+
+                        Connect surplus food with people
+                        who need it.
+
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- CONNECT COMMUNITIES -->
+
+        <div class="food-item">
+
+
+            <div class="food-info">
+
+
+                <div class="food-icon">
+                    🤝
+                </div>
+
+
+                <div>
+
+
+                    <h4>
+                        Connect Communities
+                    </h4>
+
+
+                    <p>
+
+                        Restaurants, NGOs and volunteers
+                        work together.
+
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         OUR IMPACT
+         ========================= -->
+
+    <div class="list-card">
+
+
+        <div class="list-header">
+
+            <h2>
+                💚 Our Impact
+            </h2>
+
+        </div>
+
+
+
+        <!-- EVERY MEAL COUNTS -->
+
+        <div class="food-item">
+
+
+            <div class="food-info">
+
+
+                <div class="food-icon">
+                    🍽️
+                </div>
+
+
+                <div>
+
+
+                    <h4>
+                        Every Meal Counts
+                    </h4>
+
+
+                    <p>
+
+                        Surplus food can become someone's
+                        valuable meal.
+
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- BETTER TOMORROW -->
+
+        <div class="food-item">
+
+
+            <div class="food-info">
+
+
+                <div class="food-icon">
+                    🌍
+                </div>
+
+
+                <div>
+
+
+                    <h4>
+                        Better Tomorrow
+                    </h4>
+
+
+                    <p>
+
+                        Together we create a cleaner,
+                        kinder community.
+
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+</main>
+
+
+</div>
+
+
+</body>
+
+</html>

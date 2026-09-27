@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Requests | FoodLoop</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        .requests-page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px 50px;
+        }
+
+        .requests-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .foodloop-logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .requests-header h1 {
+            margin-bottom: 8px;
+        }
+
+        .requests-header p {
+            color: #666;
+        }
+
+        .requests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 22px;
+        }
+
+        .request-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+            border: 1px solid #eeeeee;
+        }
+
+        .request-card h2 {
+            margin-top: 0;
+            color: #1f7a4d;
+        }
+
+        .request-info {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .request-info strong {
+            color: #222;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .status-pending {
+            background: #fff4cc;
+            color: #9a6b00;
+        }
+
+        .status-approved {
+            background: #dff6e8;
+            color: #187642;
+        }
+
+        .status-rejected {
+            background: #ffe1e1;
+            color: #c62828;
+        }
+
+        .status-completed {
+            background: #dcecff;
+            color: #1769aa;
+        }
+
+        .status-message {
+            margin-top: 18px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: #f7f9f8;
+            font-size: 14px;
+        }
+
+        .empty-state {
+            background: white;
+            padding: 50px 25px;
+            text-align: center;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+        }
+
+        .empty-state h2 {
+            margin-bottom: 10px;
+        }
+
+        .page-actions {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .page-actions a {
+            margin: 5px;
+        }
+
+        .food-button {
+            display: inline-block;
+            padding: 11px 18px;
+            background: #1f7a4d;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .food-button:hover {
+            background: #16633d;
+        }
+
+        .secondary-button {
+            display: inline-block;
+            padding: 10px 16px;
+            border: 1px solid #1f7a4d;
+            color: #1f7a4d !important;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .secondary-button:hover {
+            background: #eef8f2;
+        }
+
+        @media (max-width: 600px) {
+
+            .requests-page {
+                padding: 20px 12px 40px;
+            }
+
+            .requests-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .request-card {
+                padding: 20px;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="requests-page">
+
+    <!-- Header -->
+
+    <div class="requests-header">
+
+        <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="FoodLoop Logo"
+            class="foodloop-logo">
+
+        <h1>📋 My Food Requests</h1>
+
+        <p>
+            Welcome, {{ session["name"] }} 👋
+        </p>
+
+    </div>
+
+
+    <!-- Requests -->
+
+    {% if requests %}
+
+        <div class="requests-grid">
+
+            {% for req in requests %}
+
+                <div class="request-card">
+
+                    <h2>
+                        🍱 {{ req["food_name"] }}
+                    </h2>
+
+                    <p class="request-info">
+                        <strong>Food Type:</strong>
+                        {{ req["food_type"] }}
+                    </p>
+
+                    <p class="request-info">
+                        <strong>Requested Quantity:</strong>
+                        {{ req["requested_quantity"] }}
+                        {{ req["quantity_unit"] }}
+                    </p>
+
+                    <p class="request-info">
+                        <strong>Donor:</strong>
+                        {{ req["donor_name"] }}
+                    </p>
+
+                    <p class="request-info">
+                        <strong>Available Until:</strong>
+                        {{ req["available_until"] }}
+                    </p>
+
+                    <p class="request-info">
+                        <strong>Request Date:</strong>
+                        {{ req["requested_at"] }}
+                    </p>
+
+                    <p class="request-info">
+                        <strong>Status:</strong>
+
+                        {% if req["request_status"] == "PENDING" %}
+
+                            <span class="status-badge status-pending">
+                                ⏳ PENDING
+                            </span>
+
+                        {% elif req["request_status"] == "APPROVED" %}
+
+                            <span class="status-badge status-approved">
+                                ✅ APPROVED
+                            </span>
+
+                        {% elif req["request_status"] == "REJECTED" %}
+
+                            <span class="status-badge status-rejected">
+                                ❌ REJECTED
+                            </span>
+
+                        {% elif req["request_status"] == "COMPLETED" %}
+
+                            <span class="status-badge status-completed">
+                                🎉 COMPLETED
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge">
+                                {{ req["request_status"] }}
+                            </span>
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <!-- Status Message -->
+
+                    {% if req["request_status"] == "PENDING" %}
+
+                        <div class="status-message">
+                            ⏳ Waiting for restaurant approval.
+                        </div>
+
+                    {% elif req["request_status"] == "APPROVED" %}
+
+                        <div class="status-message">
+                            ✅ Food request approved!
+                            Your food is being prepared for pickup.
+                        </div>
+
+                    {% elif req["request_status"] == "REJECTED" %}
+
+                        <div class="status-message">
+                            ❌ Food request rejected by the restaurant.
+                        </div>
+
+                    {% elif req["request_status"] == "COMPLETED" %}
+
+                        <div class="status-message">
+                            🎉 Food delivery completed successfully!
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    <!-- No Requests -->
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <h2>📭 No Requests Yet</h2>
+
+            <p>
+                You haven't requested any surplus food yet.
+            </p>
+
+            <br>
+
+            <a href="/available-food"
+               class="food-button">
+                🍱 Find Available Food
+            </a>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- Page Navigation -->
+
+    <div class="page-actions">
+
+        <a href="/dashboard"
+           class="secondary-button">
+            ← Dashboard
+        </a>
+
+        <a href="/available-food"
+           class="secondary-button">
+            🍱 Available Food
+        </a>
+
+        <a href="/logout"
+           class="secondary-button">
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
