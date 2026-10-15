@@ -1,7 +1,4 @@
 Flask
 mysql-connector-python
 python-dotenv
-Werkzeug
-gunicorngit add requirements.txt
-git commit -m "Add gunicorn"
-git push
+gunicorn
